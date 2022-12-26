@@ -1,17 +1,18 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
 import 'package:animate_do/animate_do.dart';
 
 class ShoeContainer extends StatelessWidget {
-  const ShoeContainer(
-      {super.key,
-      required this.horizontalMargin,
-      required this.verticalMargin});
+  const ShoeContainer({
+    super.key,
+    this.horizontalMargin = 30,
+    this.verticalMargin = 20,
+    this.fullscreen = false,
+  });
 
   final double horizontalMargin;
   final double verticalMargin;
+  final bool fullscreen;
 
   @override
   Widget build(BuildContext context) {
@@ -27,9 +28,9 @@ class ShoeContainer extends StatelessWidget {
         borderRadius: BorderRadius.circular(30),
       ),
       child: Column(
-        children: const [
-          _ShoeAndShadow(),
-          _ShoeSizes(),
+        children: [
+          const _ShoeAndShadow(),
+          if (!fullscreen) const _ShoeSizes(),
         ],
       ),
     );
@@ -37,7 +38,7 @@ class ShoeContainer extends StatelessWidget {
 }
 
 class _ShoeAndShadow extends StatelessWidget {
-  const _ShoeAndShadow({super.key});
+  const _ShoeAndShadow();
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +47,8 @@ class _ShoeAndShadow extends StatelessWidget {
       child: Stack(
         children: [
           const Positioned(bottom: 20, right: 0, child: _ShoeShadow()),
-          FadeInDown(child: Image(image: AssetImage('assets/images/azul.png'))),
+          FadeInDown(
+              child: const Image(image: AssetImage('assets/images/azul.png'))),
         ],
       ),
     );
@@ -81,7 +83,7 @@ class _ShoeShadow extends StatelessWidget {
 }
 
 class _ShoeSizes extends StatelessWidget {
-  const _ShoeSizes({super.key});
+  const _ShoeSizes();
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +106,6 @@ class _ShoeSizes extends StatelessWidget {
 
 class _ShoeSizeButton extends StatelessWidget {
   const _ShoeSizeButton({
-    super.key,
     required this.shoeSize,
   });
 
@@ -120,7 +121,10 @@ class _ShoeSizeButton extends StatelessWidget {
         boxShadow: [
           if (shoeSize == 9)
             const BoxShadow(
-                color: Color(0xffF1A23A), blurRadius: 10, offset: Offset(0, 5)),
+              color: Color(0xffF1A23A),
+              blurRadius: 10,
+              offset: Offset(0, 5),
+            ),
         ],
         color: (shoeSize == 9) ? const Color(0xffF1A23A) : Colors.white,
       ),
