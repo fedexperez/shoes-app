@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shoes_app/models/shoe_model.dart';
 
 class ShoeColorButton extends StatelessWidget {
   final double horizontalPadding;
   final double verticalPadding;
   final Color shoeColor;
+  final Function? onPressedReceived;
+  final String shoeImagePath;
 
   const ShoeColorButton({
     super.key,
     this.horizontalPadding = 0,
     this.verticalPadding = 0,
     required this.shoeColor,
+    this.onPressedReceived,
+    required this.shoeImagePath,
   });
 
   @override
@@ -29,7 +35,10 @@ class ShoeColorButton extends StatelessWidget {
     );
 
     return ElevatedButton(
-      onPressed: () {},
+      onPressed: () {
+        final shoeModel = Provider.of<ShoeModel>(context, listen: false);
+        shoeModel.setShoeImage = shoeImagePath;
+      },
       style: style,
       child: null,
     );

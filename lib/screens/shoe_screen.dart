@@ -9,15 +9,13 @@ class ShoeScreen extends StatelessWidget {
     return Scaffold(
       body: Column(
         children: [
-          const CustomAppBar(
-            title: 'For You',
-          ),
+          const CustomAppBar(title: 'For You'),
           Expanded(
             child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               child: Column(
                 children: const [
-                  ShoeContainer(),
+                  Hero(tag: 'shoe-container-hero', child: ShoeContainer()),
                   ShoeDescription(
                     title: 'Nike Air Max 720',
                     description:

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-
-import 'package:animate_do/animate_do.dart';
+import 'package:provider/provider.dart';
+import 'package:shoes_app/models/shoe_model.dart';
 
 class ShoeContainer extends StatelessWidget {
   const ShoeContainer({
@@ -16,22 +16,29 @@ class ShoeContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(
-        horizontal: horizontalMargin,
-        vertical: verticalMargin,
-      ),
-      height: 400,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: Colors.amber.shade300,
-        borderRadius: BorderRadius.circular(30),
-      ),
-      child: Column(
-        children: [
-          const _ShoeAndShadow(),
-          if (!fullscreen) const _ShoeSizes(),
-        ],
+    return GestureDetector(
+      onTap: () {
+        if (!fullscreen) {
+          Navigator.pushNamed(context, 'shoe');
+        }
+      },
+      child: Container(
+        margin: EdgeInsets.symmetric(
+          horizontal: horizontalMargin,
+          vertical: verticalMargin,
+        ),
+        height: (fullscreen) ? 410 : 400,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: Colors.amber.shade300,
+          borderRadius: BorderRadius.circular(30),
+        ),
+        child: Column(
+          children: [
+            const _ShoeAndShadow(),
+            if (!fullscreen) const _ShoeSizes(),
+          ],
+        ),
       ),
     );
   }
@@ -42,13 +49,14 @@ class _ShoeAndShadow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final shoeModel = Provider.of<ShoeModel>(context);
+
     return Padding(
       padding: const EdgeInsets.all(50),
       child: Stack(
         children: [
           const Positioned(bottom: 20, right: 0, child: _ShoeShadow()),
-          FadeInDown(
-              child: const Image(image: AssetImage('assets/images/azul.png'))),
+          Image(image: AssetImage(shoeModel.getShoeImage)),
         ],
       ),
     );
@@ -113,33 +121,47 @@ class _ShoeSizeButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 45,
-      height: 45,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(11),
-        boxShadow: [
-          if (shoeSize == 9)
-            const BoxShadow(
-              color: Color(0xffF1A23A),
-              blurRadius: 10,
-              offset: Offset(0, 5),
-            ),
-        ],
-        color: (shoeSize == 9) ? const Color(0xffF1A23A) : Colors.white,
-      ),
-      alignment: Alignment.center,
-      child: Text(
-        shoeSize.toString().replaceAll('.0', ''),
-        style: (shoeSize == 9)
-            ? const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              )
-            : TextStyle(
-                color: Colors.amber.shade700,
-                fontWeight: FontWeight.bold,
+    final shoeModel = Provider.of<ShoeModel>(context);
+
+    return GestureDetector(
+      onTap: () {
+        final shoeModel = Provider.of<ShoeModel>(context, listen: false);
+        shoeModel.setShoeSize = shoeSize;
+      },
+      child: Container(
+        width: 45,
+        height: 45,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(11),
+          boxShadow: [
+            if (shoeSize == shoeModel.getShoeSize)
+              const BoxShadow(
+                color: Color(0xffF1A23A),
+                blurRadius: 10,
+                offset: Offset(0, 5),
               ),
+          ],
+          color: (shoeSize == shoeModel.getShoeSize)
+              ? const Color(0xffF1A23A)
+              : Colors.white,
+        ),
+        alignment: Alignment.center,
+        child: Text(
+          shoeSize.toString().replaceAll('.0', ''),
+          style: (shoeSize == shoeModel.getShoeSize)
+              ? const TextStyle(
+                  color: Colors.white,
+                  decoration: TextDecoration.none,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                )
+              : TextStyle(
+                  color: Colors.amber.shade700,
+                  decoration: TextDecoration.none,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+        ),
       ),
     );
   }
